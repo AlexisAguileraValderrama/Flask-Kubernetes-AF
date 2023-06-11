@@ -33,10 +33,10 @@ pipeline {
     stage('Deploying React.js container to Kubernetes') {
       steps {
         script {
-          kubernetesDeploy configs: 'mysql-deploy.yml', kubeconfigId: 'kubeconfig')
-          kubernetesDeploy configs: 'mysql-service.yml', kubeconfigId: 'kubeconfig')
-          kubernetesDeploy configs: 'app-deploy.yml', kubeconfigId: 'kubeconfig')
-          kubernetesDeploy configs: 'app-service.yml', kubeconfigId: 'kubeconfig')
+          kubernetesDeploy(configs: 'mysql-deploy.yml', kubeconfigId: 'kubeconfig')
+          kubernetesDeploy(configs: 'mysql-service.yml', kubeconfigId: 'kubeconfig')
+          kubernetesDeploy(configs: 'app-deploy.yml', kubeconfigId: 'kubeconfig')
+          kubernetesDeploy(configs: 'app-service.yml', kubeconfigId: 'kubeconfig')
         }
       }
     }
