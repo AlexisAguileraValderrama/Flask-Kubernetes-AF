@@ -8,7 +8,7 @@ pipeline {
     stage('Checkout Source') {
       steps {
         git 'https://github.com/AlexisAguileraValderrama/Flask-Kubernetes-AF.git'
-        echo ${USER}
+        echo "${USER}"
       }
     }
     stage('Build image') {
