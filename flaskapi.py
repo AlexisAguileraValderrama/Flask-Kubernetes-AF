@@ -6,8 +6,6 @@ app = Flask(__name__)
 
 mysql = MySQL()
 
-print("Hola TSIC")
-
 # MySQL configurations
 app.config["MYSQL_DATABASE_USER"] = "root"
 app.config["MYSQL_DATABASE_PASSWORD"] = os.getenv("db_root_password")
