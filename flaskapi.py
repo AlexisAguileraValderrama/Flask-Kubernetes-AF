@@ -1,5 +1,7 @@
 import os
-from flask import jsonify, request, Flask
+from crypt import methods
+from distutils.log import debug
+from flask import jsonify, request, Flask, render_template
 from flaskext.mysql import MySQL
 
 app = Flask(__name__)
@@ -18,7 +20,7 @@ mysql.init_app(app)
 @app.route("/")
 def index():
     """Function to test the functionality of the API"""
-    return "Hello, world!"
+    return render_template("index.html")
 
 
 @app.route("/create", methods=["POST"])
