@@ -1,11 +1,11 @@
 import os
 from crypt import methods
 from distutils.log import debug
-from flask import jsonify, request, Flask, render_template
+from flask import jsonify, request, Flask, render_template, session,redirect, flash,url_for
 from flaskext.mysql import MySQL
 
 app = Flask(__name__)
-
+app.secret_key = 'supersecretkey'
 mysql = MySQL()
 
 # MySQL configurations
@@ -17,10 +17,71 @@ mysql = MySQL()
 # mysql.init_app(app)
 
 
+def obtener_productos():
+    # Aquí iría tu lógica para obtener la lista de productos de la base de datos
+    # o de alguna otra fuente de datos
+    
+    # Por ahora, simplemente devolvemos una lista de ejemplo
+    productos = [
+        {
+            "id": "1",
+            "nombre": "Producto 1",
+            "descripcion": "Descripción del producto 1",
+            "precio": 10.99
+        },
+        {
+            "id": "2",
+            "nombre": "Producto 2",
+            "descripcion": "Descripción del producto 2",
+            "precio": 19.99
+        },
+        {
+            "id": "3",
+            "nombre": "Producto 3",
+            "descripcion": "Descripción del producto 3",
+            "precio": 15.99
+        }
+    ]
+
+    return productos
+
+def obtener_producto_por_id(producto_id):
+    # Aquí iría tu lógica para obtener el producto de la base de datos
+    # o de alguna otra fuente de datos en función del ID proporcionado
+    
+    # Por ahora, simplemente devolvemos un diccionario de ejemplo
+    productos = {
+        "1": {
+            "id": "1",
+            "nombre": "Producto 1",
+            "descripcion": "Descripción del producto 1",
+            "precio": 10.99
+        },
+        "2": {
+            "id": "2",
+            "nombre": "Producto 2",
+            "descripcion": "Descripción del producto 2",
+            "precio": 19.99
+        },
+        "3": {
+            "id": "3",
+            "nombre": "Producto 3",
+            "descripcion": "Descripción del producto 3",
+            "precio": 15.99
+        }
+    }
+
+    return productos.get(producto_id)
+
+def redirect(url):
+    # Redireccionar a la URL proporcionada
+    return redirect(url)
+
+
 @app.route("/")
 def index():
     """Function to test the functionality of the API"""
-    return render_template("index.html")
+    return render_template("index2.html")
 
 
 @app.route("/create", methods=["POST"])
@@ -129,6 +190,71 @@ def delete_user(user_id):
     except Exception as exception:
         return jsonify(str(exception))
 
+@app.route("/productos")
+def productos():
+    """Function to handle the '/productos' route"""
+    # Agrega el código para manejar la lógica de la página de productos
+    # return render_template("productos.html")
+    productos = obtener_productos()  # Función para obtener la lista de productos
+    return render_template("productos2.html", productos=productos)
+
+# @app.route("/carrito")
+# def carrito():
+#     """Function to handle the '/carrito' route"""
+#     # Agrega el código para manejar la lógica de la página de carrito
+#     return render_template("carrito.html")
+
+@app.route("/checkout", methods=["GET","POST"])
+def checkout():
+    """Función para el proceso de finalización de compra"""
+    if request.method == "POST":
+        name = request.form["name"]
+        email = request.form["email"]
+        address = request.form["address"]
+
+        # Agrega aquí la lógica para procesar los datos del formulario
+
+        return "¡Gracias por tu compra!"
+
+    return render_template("checkout.html")
+
+
+
+# @app.route("/carrito")
+# def carrito():
+#     carrito = session.get("carrito", [])
+
+#     return render_template("carrito.html", carrito=carrito)
+
+
+# @app.route("/add_to_cart", methods=["POST"])
+# def add_to_cart():
+#     producto_id = request.form.get("producto_id")
+#     producto = obtener_producto_por_id(producto_id)
+
+#     if producto:
+#         # Aquí iría tu lógica para agregar el producto al carrito
+#         # Por ahora, simplemente almacenaremos el producto en una lista en memoria
+#         carrito.append(producto)
+#         return redirect("/carrito")
+#     else:
+#         flash("El producto no existe")
+#         return redirect("/productos")
+    
+lista_carrito = []
+
+@app.route("/add_to_cart", methods=["POST"])
+def add_to_cart():
+    producto_id = request.form.get("producto_id")
+    if producto_id:
+        lista_carrito.append(producto_id)
+    return render_template("modal.html")#redirect(url_for("productos"))
+
+@app.route("/carrito", methods=["GET"])
+def carrito():
+    productos_carrito = [obtener_producto_por_id(id) for id in lista_carrito]
+    return render_template("carrito2.html", productos_carrito=productos_carrito)
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=9000)

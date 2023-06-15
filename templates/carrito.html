@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <h2>Carrito de compras</h2>
+
+  <div class="container_prod">
+    <!-- Aquí puedes agregar el contenido del carrito de compras -->
+    <!-- <div class="item">
+      <h3>Libro 1</h3>
+      <p>Precio: $19.99</p>
+      <p>Cantidad: 1</p>
+    </div>
+
+    <div class="item">
+      <h3>Libro 2</h3>
+      <p>Precio: $24.99</p>
+      <p>Cantidad: 3</p>
+    </div> -->
+
+
+    {% if productos_carrito %}
+    <ul>
+      {% for producto in productos_carrito %}
+        <li>{{ producto.nombre }} - Precio: {{ producto.precio }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No hay productos en el carrito</p>
+  {% endif %}
+    
+
+
+    <!-- Puedes agregar más elementos del carrito aquí -->
+
+    <!-- <div class="total">
+      <h3>Total</h3>
+      <p>$99.96</p>
+    </div> -->
+
+    <a href="{{ url_for('checkout') }}" class="checkout-button">Realizar compra</a>
+
+  </div>
+
+  <div class="container">
+    <a class="btn" href="/">Volver al inicio</a>
+  </div>
+  
+</body>
+</html>

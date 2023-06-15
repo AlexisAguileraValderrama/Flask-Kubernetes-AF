@@ -1,0 +1,34 @@
+{% extends "productos2.html" %}
+{% block modal %}
+
+<div class="modal" id = "exampleModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Producto registrado con exito</p>
+        </div>
+        <div class="modal-footer">
+          <a href="{{url_for('productos')}}" class="btn btn-secondary">
+            Seguir Agregando !!!
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+$(document).ready(function(){
+    console.log("window")
+    $("#exampleModal").modal("show")
+})
+</script>
+{% endblock %}

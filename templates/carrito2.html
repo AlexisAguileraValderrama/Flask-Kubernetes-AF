@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://getbootstrap.com/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>Carousel Template for Bootstrap</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/carousel/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/carousel.css') }}" rel="stylesheet">
+  </head>
+  <body>
+
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="/">Carousel</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+          </ul>
+          <form class="form-inline mt-2 mt-md-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+    </header>
+
+    <main role="main">
+
+        <section class="h-100 h-custom" style="background-color: #eee;">
+            <div class="container py-5 h-100">
+              <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col">
+                  <div class="card">
+                    <div class="card-body p-4">
+          
+                      <div class="row">
+          
+                        <div class="col-lg-7">
+                          <h5 class="mb-3"><a href="/productos" class="text-body"><i
+                                class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
+                          <hr>
+          
+                          <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                              <p class="mb-1">Shopping cart</p>
+                              {% if productos_carrito %}
+                                <p class="mb-0">Productos en el carrito</p>
+                              {% else %}
+                              <p class="mb-0">No hay productos agregados</p>
+                              {% endif %}
+                            </div>
+                          </div>
+                        
+                          {% for producto in productos_carrito %}
+                          <div class="card mb-3">
+                            <div class="card-body">
+                              <div class="d-flex justify-content-between">
+                                <div class="d-flex flex-row align-items-center">
+                                  <div>
+                                    <img
+                                      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                      class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
+                                  </div>
+                                  <div class="ms-3">
+                                    <h5>{{ producto.nombre }}</h5>
+                                  </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center">
+                                  <div style="width: 50px;">
+                                    <h5 class="fw-normal mb-0">1</h5>
+                                  </div>
+                                  <div style="width: 80px;">
+                                    <h5 class="mb-0">{{ producto.precio }}</h5>
+                                  </div>
+                                  <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {% endfor %}
+          
+                        </div>
+                        <div class="col-lg-5">
+          
+                          <div class="card bg-primary text-white rounded-3">
+                            <div class="card-body">
+                              <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="mb-0">Card details</h5>
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
+                                  class="img-fluid rounded-3" style="width: 45px;" alt="Avatar">
+                              </div>
+          
+                             
+                              <form class="mt-4">
+                                <div class="form-outline form-white mb-4">
+                                  <input type="text" id="typeName" class="form-control form-control-lg" siez="17"
+                                    placeholder="Cardholder's Name" />
+                                  <label class="form-label" for="typeName">Nombre de cliente</label>
+                                </div>
+          
+                                <div class="form-outline form-white mb-4">
+                                  <input type="text" id="typeText" class="form-control form-control-lg" siez="17"
+                                    placeholder="1234 5678 9012 3457" minlength="19" maxlength="19" />
+                                  <label class="form-label" for="typeText">Correo electronico</label>
+                                </div>
+
+                                <div class="form-outline form-white mb-4">
+                                    <input type="text" id="typeText" class="form-control form-control-lg" siez="17"
+                                      placeholder="1234 5678 9012 3457" minlength="19" maxlength="19" />
+                                    <label class="form-label" for="typeText">Direccion</label>
+                                </div>
+          
+                              </form>
+          
+                              <hr class="my-4">
+          
+                              <div class="d-flex justify-content-between">
+                                <p class="mb-2">Subtotal</p>
+                                <p class="mb-2">$4798.00</p>
+                              </div>
+          
+                              <div class="d-flex justify-content-between">
+                                <p class="mb-2">Shipping</p>
+                                <p class="mb-2">$20.00</p>
+                              </div>
+          
+                              <div class="d-flex justify-content-between mb-4">
+                                <p class="mb-2">Total(Incl. taxes)</p>
+                                <p class="mb-2">$4818.00</p>
+                              </div>
+          
+                              <button type="button" class="btn btn-info btn-block btn-lg">
+                                <div class="d-flex justify-content-between">
+                                  <span>$4818.00</span>
+                                  <span>Checkout <i class="fas fa-long-arrow-alt-right ms-2"></i></span>
+                                </div>
+                              </button>
+          
+                            </div>
+                          </div>
+          
+                        </div>
+          
+                      </div>
+          
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+      <!-- FOOTER -->
+      <footer class="container">
+        <p class="float-right"><a href="#">Back to top</a></p>
+        <p>© 2017-2018 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
+      </footer>
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.slim.min.js') }}" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="{{ url_for('static', filename='js/holder.min.js') }}"></script>
+  
+
+
+</body>
+</html>

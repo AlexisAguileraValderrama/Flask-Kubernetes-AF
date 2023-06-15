@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://getbootstrap.com/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>Carousel Template for Bootstrap</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/carousel/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/carousel.css') }}" rel="stylesheet">
+  </head>
+  <body>
+
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="/">Carousel</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+          </ul>
+          <form class="form-inline mt-2 mt-md-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+    </header>
+
+    <main role="main">
+
+        <section style="background-color: #eee;">
+            <div class="text-center container py-5">
+              <h4 class="mt-4 mb-5"><strong>Bestsellers</strong></h4>
+          
+              <div class="row">
+                {% for producto in productos %}
+                <div class="col-lg-4 col-md-12 mb-4">
+                  <div class="card">
+                    <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                      data-mdb-ripple-color="light">
+                      <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/belt.webp"
+                        class="w-100" />
+                      <a href="#!">
+                        <div class="mask">
+                          <div class="d-flex justify-content-start align-items-end h-100">
+                            <h5><span class="badge bg-primary ms-2">New</span></h5>
+                          </div>
+                        </div>
+                        <div class="hover-overlay">
+                          <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="card-body">
+                      <a href="" class="text-reset">
+                        <h5 class="card-title mb-3">{{ producto.nombre }}</h5>
+                      </a>
+                      <a href="" class="text-reset">
+                        {{ producto.descripcion }}
+                      </a>
+                      <h6 class="mb-3">{{ producto.precio }}</h6>
+                      <form action="/add_to_cart" method="post">
+                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                        <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+                      </form>
+                    </div>
+
+
+                    
+                  </div>
+                </div>
+                {% endfor %}
+          
+
+              </div>
+          
+            </div>
+          </section>
+          
+          
+
+      <!-- FOOTER -->
+      <footer class="container">
+        <p class="float-right"><a href="#">Back to top</a></p>
+        <p>© 2017-2018 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
+      </footer>
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.slim.min.js') }}" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="{{ url_for('static', filename='js/holder.min.js') }}"></script>
+  
+
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500" preserveAspectRatio="none" style="display: none; visibility: hidden; position: absolute; top: -100%; left: -100%;"><defs><style type="text/css"></style></defs><text x="0" y="25" style="font-weight:bold;font-size:25pt;font-family:Arial, Helvetica, Open Sans, sans-serif">500x500</text>
+</svg>
+{% block modal %}{% endblock %}
+</body>
+{% block script %}{% endblock %}
+</html>

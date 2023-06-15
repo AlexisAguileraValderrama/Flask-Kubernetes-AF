@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <h2>Productos</h2>
+
+  <div class="container_prod">
+    <!-- Aquí puedes agregar el contenido de la página de productos -->
+    
+    <!-- <div class="product">
+      <h3>Libro 1</h3>
+      <p>Descripción del libro 1.</p>
+      <p>Precio: $19.99</p>
+    </div>
+
+    <div class="product">
+      <h3>Libro 2</h3>
+      <p>Descripción del libro 2.</p>
+      <p>Precio: $24.99</p>
+    </div> -->
+
+      {% for producto in productos %}
+    <div class="producto">
+      <h3>{{ producto.nombre }}</h3>
+      <p>{{ producto.descripcion }}</p>
+      <p>Precio: {{ producto.precio }}</p>
+      <form action="/add_to_cart" method="post">
+        <input type="hidden" name="producto_id" value="{{ producto.id }}">
+        <button type="submit">Agregar al carrito</button>
+        
+      </form>
+    </div>
+  {% endfor %}
+
+  
+  
+  <div id="mensaje-agregado" class="mensaje-agregado hidden">
+    Producto agregado al carrito
+  </div>
+  
+    
+    <!-- Puedes agregar más productos aquí -->
+
+  </div>
+
+  <div class="container">
+    <a class="btn" href="/">Volver al inicio</a>
+  </div>
+  
+
+  <script>
+    // Función para mostrar el mensaje
+    function mostrarMensajeAgregado() {
+      var mensaje = document.getElementById("mensaje-agregado");
+      mensaje.classList.remove("hidden");
+      setTimeout(function() {
+        mensaje.classList.add("hidden");
+      }, 3000); // El mensaje se ocultará después de 3 segundos (3000 milisegundos)
+    }
+  </script>
+  
+  <script>
+    // Función para enviar la solicitud POST y mostrar el mensaje
+    function agregarAlCarrito(productoId) {
+      fetch("/add_to_cart", {
+        method: "POST",
+        body: new URLSearchParams({
+          producto_id: productoId
+        })
+      })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        mostrarMensajeAgregado();
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+    }
+  </script>
+
+
+</body>
+</html>
