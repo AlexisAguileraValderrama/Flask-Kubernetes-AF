@@ -7,7 +7,8 @@ RUN apt-get -y install \
     nginx \
     python3-dev \
     build-essential \
-    curl
+    curl \
+    nano
 
 WORKDIR /app
 
