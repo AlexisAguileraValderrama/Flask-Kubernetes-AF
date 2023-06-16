@@ -8,7 +8,7 @@ RUN apt-get -y install \
     python3-dev \
     build-essential \
     curl \
-    nano
+    vi
 
 WORKDIR /app
 
