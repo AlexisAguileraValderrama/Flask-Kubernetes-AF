@@ -4,6 +4,8 @@ from distutils.log import debug
 from flask import jsonify, request, Flask, render_template, session,redirect, flash,url_for
 from flaskext.mysql import MySQL
 
+id = 0
+
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 mysql = MySQL()
@@ -17,71 +19,89 @@ app.config["MYSQL_DATABASE_PORT"] = int(os.getenv("MYSQL_SERVICE_PORT"))
 mysql.init_app(app)
 
 
-def obtener_productos():
+def obtener_productos(resp):
     # Aquí iría tu lógica para obtener la lista de productos de la base de datos
     # o de alguna otra fuente de datos
     
     # Por ahora, simplemente devolvemos una lista de ejemplo
-    productos = [
-        {
-            "id": "1",
-            "nombre": "Producto 1",
-            "descripcion": "Descripción del producto 1",
-            "precio": 10.99
-        },
-        {
-            "id": "2",
-            "nombre": "Producto 2",
-            "descripcion": "Descripción del producto 2",
-            "precio": 19.99
-        },
-        {
-            "id": "3",
-            "nombre": "Producto 3",
-            "descripcion": "Descripción del producto 3",
-            "precio": 15.99
-        }
-    ]
 
-    return productos
+    list_json = []
+    for e in resp.json:
+        dict_json = {}
+        dict_json["id"] = e[0]
+        dict_json["nombre"] = e[1]
+        dict_json["precio"] = e[2]
+        dict_json["descripcion"] = e[3]
+        dict_json["imagen"] = e[4]
+        list_json.append(dict_json)
+    return list_json
 
-def obtener_producto_por_id(producto_id):
+def obtener_producto_por_id(rows):
     # Aquí iría tu lógica para obtener el producto de la base de datos
     # o de alguna otra fuente de datos en función del ID proporcionado
     
     # Por ahora, simplemente devolvemos un diccionario de ejemplo
-    productos = {
-        "1": {
-            "id": "1",
-            "nombre": "Producto 1",
-            "descripcion": "Descripción del producto 1",
-            "precio": 10.99
-        },
-        "2": {
-            "id": "2",
-            "nombre": "Producto 2",
-            "descripcion": "Descripción del producto 2",
-            "precio": 19.99
-        },
-        "3": {
-            "id": "3",
-            "nombre": "Producto 3",
-            "descripcion": "Descripción del producto 3",
-            "precio": 15.99
-        }
-    }
 
-    return productos.get(producto_id)
+    list_json = []
+    counter = 1 
+    for e in rows:
+        dict_json = {}
+        dict_json["id"] = e[2]
+        dict_json["nombre"] = e[6]
+        dict_json["precio"] = e[7]
+        dict_json["descripcion"] = e[8]
+        dict_json["imagen"] = e[9]
+        list_json.append(dict_json)
+        #list_json[counter] = dict_json
+        #counter += 1
+    
+    return list_json
 
 def redirect(url):
     # Redireccionar a la URL proporcionada
     return redirect(url)
 
+@app.route("/index")
+def reindex():
+    index()
 
 @app.route("/")
 def index():
+    global id
     """Function to test the functionality of the API"""
-    return render_template("index2.html")
+
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute("select count(*) from flaskapi.TRANSACCION where status='active'")
+        row = cursor.fetchone()
+
+        resp = jsonify(row)
+        resp.status_code = 200
+
+        if row[0] == 0:
+            sql = "INSERT INTO flaskapi.TRANSACCION(status) " \
+              "VALUES(%s)"
+            
+            data = ("active")
+            
+            cursor.execute(sql, data)
+            conn.commit()
+
+        cursor.execute("select TRANSACCION_ID from flaskapi.TRANSACCION where status='active'")
+        row = cursor.fetchone()
+
+        id = row[0]
+        
+        cursor.close()
+        conn.close()
+        
+        return render_template("index2.html")
+    
+    except Exception as exception:
+        return jsonify(str(exception))
+
+
 
 
 @app.route("/create", methods=["POST"])
@@ -204,9 +224,11 @@ def productos():
         cursor.close()
         conn.close()
         resp = jsonify(rows)
-        productos = resp
         resp.status_code = 200
-        render_template("productos2.html", productos=productos)
+
+        productos = obtener_productos(resp)
+
+        return render_template("productos2.html", productos=productos)
     except Exception as exception:
         return jsonify(str(exception))
     
@@ -221,17 +243,29 @@ def productos():
 
 @app.route("/checkout", methods=["GET","POST"])
 def checkout():
+    global id
     """Función para el proceso de finalización de compra"""
     if request.method == "POST":
         name = request.form["name"]
         email = request.form["email"]
         address = request.form["address"]
 
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        sql = "UPDATE TRANSACCION SET nombre = %s, direccion = %s, email = %s, status = %s where transaccion_id = %s"
+        data = (name,address,email,"terminated",id)
+
+        cursor.execute(sql, data)
+        conn.commit()
+
         # Agrega aquí la lógica para procesar los datos del formulario
 
-        return "¡Gracias por tu compra!"
+        cursor.close()
+        conn.close()
 
-    return render_template("checkout.html")
+
+        return render_template("modal_checkout.html",total = 0)
 
 
 
@@ -260,15 +294,51 @@ lista_carrito = []
 
 @app.route("/add_to_cart", methods=["POST"])
 def add_to_cart():
+    global id
     producto_id = request.form.get("producto_id")
+    precio = request.form.get("precio")
     if producto_id:
-        lista_carrito.append(producto_id)
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+
+        sql = "INSERT INTO flaskapi.PRODUCTO_TRANSACCION(transaccion_id, producto_id,cantidad,total) " \
+              "VALUES(%s,%s,%s,%s)"
+            
+        data = (id,producto_id,1,precio)
+            
+        cursor.execute(sql, data)
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+
     return render_template("modal.html")#redirect(url_for("productos"))
 
 @app.route("/carrito", methods=["GET"])
 def carrito():
-    productos_carrito = [obtener_producto_por_id(id) for id in lista_carrito]
-    return render_template("carrito2.html", productos_carrito=productos_carrito)
+    global id
+    #productos_carrito = [obtener_producto_por_id(id) for id in lista_carrito]
+
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    sql = "select * from flaskapi.PRODUCTO_TRANSACCION a " \
+          "left join flaskapi.PRODUCTO b on a.producto_id = b.producto_id where transaccion_id = %s"
+    data = (id)
+
+    cursor.execute(sql, data)
+    rows = cursor.fetchall()
+
+    productos = obtener_producto_por_id(rows)
+
+    suma = sum(item['precio'] for item in productos)
+
+    cursor.close()
+    conn.close()
+
+    return render_template("carrito2.html", productos_carrito=productos, total=suma)
 
 
 if __name__ == "__main__":
