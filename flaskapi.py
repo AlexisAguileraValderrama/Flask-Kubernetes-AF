@@ -9,12 +9,12 @@ app.secret_key = 'supersecretkey'
 mysql = MySQL()
 
 # MySQL configurations
-# app.config["MYSQL_DATABASE_USER"] = "root"
-# app.config["MYSQL_DATABASE_PASSWORD"] = os.getenv("db_root_password")
-# app.config["MYSQL_DATABASE_DB"] = os.getenv("db_name")
-# app.config["MYSQL_DATABASE_HOST"] = os.getenv("MYSQL_SERVICE_HOST")
-# app.config["MYSQL_DATABASE_PORT"] = int(os.getenv("MYSQL_SERVICE_PORT"))
-# mysql.init_app(app)
+app.config["MYSQL_DATABASE_USER"] = "root"
+app.config["MYSQL_DATABASE_PASSWORD"] = os.getenv("db_root_password")
+app.config["MYSQL_DATABASE_DB"] = os.getenv("db_name")
+app.config["MYSQL_DATABASE_HOST"] = os.getenv("MYSQL_SERVICE_HOST")
+app.config["MYSQL_DATABASE_PORT"] = int(os.getenv("MYSQL_SERVICE_PORT"))
+mysql.init_app(app)
 
 
 def obtener_productos():
@@ -195,8 +195,23 @@ def productos():
     """Function to handle the '/productos' route"""
     # Agrega el código para manejar la lógica de la página de productos
     # return render_template("productos.html")
-    productos = obtener_productos()  # Función para obtener la lista de productos
-    return render_template("productos2.html", productos=productos)
+    
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM PRODUCTO")
+        rows = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        resp = jsonify(rows)
+        productos = resp
+        resp.status_code = 200
+        render_template("productos2.html", productos=productos)
+    except Exception as exception:
+        return jsonify(str(exception))
+    
+    #productos = obtener_productos()  # Función para obtener la lista de productos
+    #return render_template("productos2.html", productos=productos)
 
 # @app.route("/carrito")
 # def carrito():
