@@ -7,8 +7,7 @@ RUN apt-get -y install \
     nginx \
     python3-dev \
     build-essential \
-    curl \
-    vim
+    curl
 
 WORKDIR /app
 
