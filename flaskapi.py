@@ -199,7 +199,7 @@ def productos():
     try:
         conn = mysql.connect()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM PRODUCTO")
+        cursor.execute("SELECT * FROM flaskapi.PRODUCTO")
         rows = cursor.fetchall()
         cursor.close()
         conn.close()
